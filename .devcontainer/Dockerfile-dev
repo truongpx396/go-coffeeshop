@@ -1,18 +1,25 @@
 ARG VARIANT="jammy"
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 
+# FROM mcr.microsoft.com/vscode/devcontainers/dotnet:0-6.0-bullseye-slim
+
 COPY core-libs.sh /tmp/
 RUN yes | unminimize 2>&1 \ 
     && chmod +x /tmp/core-libs.sh \
     && bash /tmp/core-libs.sh \
     && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/core-libs.sh
 
+# RUN chmod +x /tmp/core-libs.sh \
+#     && bash /tmp/core-libs.sh \
+#     && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/core-libs.sh
+
+
 # Install Buf
 RUN BIN="/usr/local/bin" \
     && VERSION="1.8.0" \
     && curl -sSL \
-        "https://github.com/bufbuild/buf/releases/download/v${VERSION}/buf-$(uname -s)-$(uname -m)" \
-        -o "${BIN}/buf" \
+    "https://github.com/bufbuild/buf/releases/download/v${VERSION}/buf-$(uname -s)-$(uname -m)" \
+    -o "${BIN}/buf" \
     && chmod +x "${BIN}/buf"
 
 # Install migrate CLI

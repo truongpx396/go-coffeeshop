@@ -2,14 +2,20 @@
 set -euo pipefail
 
 # install apt-add-repository
+sudo apt-get update
+sudo apt-get install wget gpg coreutils
+
 apt update 
 apt install software-properties-common -y
 apt update
 
+
 echo "Adding HashiCorp GPG key and repo..."
-curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
-apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-apt-get update
+# curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+# apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+# apt-get update
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 
 # install cni plugins https://www.nomadproject.io/docs/integrations/consul-connect#cni-plugins
 echo "Installing cni plugins..."
@@ -22,6 +28,8 @@ echo "Installing Consul..."
 sudo apt-get install consul -y
 
 echo "Installing Nomad..."
+# sudo apt-get install nomad -y
+sudo apt-get update
 sudo apt-get install nomad -y
 
 echo "Installing Vault..."

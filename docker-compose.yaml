@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 services:
   postgres:
@@ -8,9 +8,9 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=P@ssw0rd
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: ['CMD', 'pg_isready']
     ports:
-      - "5432:5432"
+      - '5432:5432'
     networks:
       - coffeeshop-network
 
@@ -25,11 +25,11 @@ services:
       timeout: 30s
       retries: 3
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - '5672:5672'
+      - '15672:15672'
     networks:
       - coffeeshop-network
-  
+
   proxy:
     build:
       context: .
@@ -42,7 +42,7 @@ services:
       GRPC_COUNTER_HOST: 'counter'
       GRPC_COUNTER_PORT: 5002
     ports:
-      - 5000:5000
+      - 5005:5005
     depends_on:
       - product
       - counter
@@ -68,7 +68,7 @@ services:
     image: go-coffeeshop-counter
     environment:
       APP_NAME: 'counter-service in docker'
-      IN_DOCKER: "true"
+      IN_DOCKER: 'true'
       PG_URL: postgres://postgres:P@ssw0rd@postgres:5432/postgres
       PG_DSN_URL: host=postgres user=postgres password=P@ssw0rd dbname=postgres sslmode=disable
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
@@ -90,7 +90,7 @@ services:
     image: go-coffeeshop-barista
     environment:
       APP_NAME: 'barista-service in docker'
-      IN_DOCKER: "true"
+      IN_DOCKER: 'true'
       PG_URL: postgres://postgres:P@ssw0rd@postgres:5432/postgres
       PG_DSN_URL: host=postgres user=postgres password=P@ssw0rd dbname=postgres sslmode=disable
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
@@ -109,7 +109,7 @@ services:
     image: go-coffeeshop-kitchen
     environment:
       APP_NAME: 'kitchen-service in docker'
-      IN_DOCKER: "true"
+      IN_DOCKER: 'true'
       PG_URL: postgres://postgres:P@ssw0rd@postgres:5432/postgres
       PG_DSN_URL: host=postgres user=postgres password=P@ssw0rd dbname=postgres sslmode=disable
       RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
@@ -127,7 +127,7 @@ services:
       dockerfile: ./docker/Dockerfile-web
     image: go-coffeeshop-web
     environment:
-      REVERSE_PROXY_URL: http://localhost:5000
+      REVERSE_PROXY_URL: http://localhost:5005
       WEB_PORT: 8888
     ports:
       - 8888:8888
